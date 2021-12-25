@@ -8,11 +8,7 @@ import (
 
 func TestAddMemberStoresNewMember(t *testing.T) {
 	mcs := MemberClubStore{}
-	expectedMember := Member{
-		name:      "member",
-		email:     "member@example.com",
-		dateAdded: time.Now(),
-	}
+	expectedMember := makeTestdMembers()[0]
 
 	mcs.AddMember(expectedMember)
 
@@ -23,18 +19,7 @@ func TestAddMemberStoresNewMember(t *testing.T) {
 
 func TestAddMemberStoresTwoMembersOnAddingTwoMembers(t *testing.T) {
 	mcs := MemberClubStore{}
-	expectedMembers := []Member{
-		Member{
-			name:      "member1",
-			email:     "member1@example.com",
-			dateAdded: time.Now(),
-		},
-		Member{
-			name:      "member2",
-			email:     "member2@example.com",
-			dateAdded: time.Now(),
-		},
-	}
+	expectedMembers := makeTestdMembers()
 
 	mcs.AddMember(expectedMembers[0])
 	mcs.AddMember(expectedMembers[1])
@@ -46,18 +31,7 @@ func TestAddMemberStoresTwoMembersOnAddingTwoMembers(t *testing.T) {
 
 func TestAddMemberDoesNotAddMemberWithExistedEmail(t *testing.T) {
 	mcs := MemberClubStore{}
-	expectedMembers := []Member{
-		Member{
-			name:      "member1",
-			email:     "member1@example.com",
-			dateAdded: time.Now(),
-		},
-		Member{
-			name:      "member2",
-			email:     "member2@example.com",
-			dateAdded: time.Now(),
-		},
-	}
+	expectedMembers := makeTestdMembers()
 
 	mcs.AddMember(expectedMembers[0])
 	mcs.AddMember(expectedMembers[1])
@@ -70,7 +44,21 @@ func TestAddMemberDoesNotAddMemberWithExistedEmail(t *testing.T) {
 
 func TestGetMembersReturnsAllMembersAdded(t *testing.T) {
 	mcs := MemberClubStore{}
-	expectedMembers := []Member{
+	expectedMembers := makeTestdMembers()
+
+	mcs.AddMember(expectedMembers[0])
+	mcs.AddMember(expectedMembers[1])
+
+	fetchedMembers := mcs.GetMembers()
+	if !reflect.DeepEqual(fetchedMembers, expectedMembers) {
+		t.Errorf("Expected %v, got %v instead\n", fetchedMembers, expectedMembers)
+	}
+}
+
+// Helpers
+
+func makeTestdMembers() []Member {
+	return []Member{
 		Member{
 			name:      "member1",
 			email:     "member1@example.com",
@@ -81,13 +69,5 @@ func TestGetMembersReturnsAllMembersAdded(t *testing.T) {
 			email:     "member2@example.com",
 			dateAdded: time.Now(),
 		},
-	}
-
-	mcs.AddMember(expectedMembers[0])
-	mcs.AddMember(expectedMembers[1])
-
-	fetchedMembers := mcs.GetMembers()
-	if !reflect.DeepEqual(fetchedMembers, expectedMembers) {
-		t.Errorf("Expected %v, got %v instead\n", fetchedMembers, expectedMembers)
 	}
 }
