@@ -12,9 +12,7 @@ func TestAddMemberStoresNewMember(t *testing.T) {
 
 	mcs.AddMember(expectedMember)
 
-	if mcs.members[0] != expectedMember {
-		t.Errorf("Expected %v, got %v instead\n", expectedMember, mcs.members[0])
-	}
+	expectEqual(mcs.members, []Member{expectedMember}, t)
 }
 
 func TestAddMemberStoresTwoMembersOnAddingTwoMembers(t *testing.T) {
@@ -24,9 +22,7 @@ func TestAddMemberStoresTwoMembersOnAddingTwoMembers(t *testing.T) {
 	mcs.AddMember(expectedMembers[0])
 	mcs.AddMember(expectedMembers[1])
 
-	if !reflect.DeepEqual(mcs.members, expectedMembers) {
-		t.Errorf("Expected %v, got %v instead\n", expectedMembers, mcs.members)
-	}
+	expectEqual(mcs.members, expectedMembers, t)
 }
 
 func TestAddMemberDoesNotAddMemberWithExistedEmail(t *testing.T) {
@@ -37,9 +33,7 @@ func TestAddMemberDoesNotAddMemberWithExistedEmail(t *testing.T) {
 	mcs.AddMember(expectedMembers[1])
 	mcs.AddMember(expectedMembers[0])
 
-	if !reflect.DeepEqual(mcs.members, expectedMembers) {
-		t.Errorf("Expected %v, got %v instead\n", expectedMembers, mcs.members)
-	}
+	expectEqual(mcs.members, expectedMembers, t)
 }
 
 func TestGetMembersReturnsAllMembersAdded(t *testing.T) {
@@ -50,9 +44,7 @@ func TestGetMembersReturnsAllMembersAdded(t *testing.T) {
 	mcs.AddMember(expectedMembers[1])
 
 	fetchedMembers := mcs.GetMembers()
-	if !reflect.DeepEqual(fetchedMembers, expectedMembers) {
-		t.Errorf("Expected %v, got %v instead\n", fetchedMembers, expectedMembers)
-	}
+	expectEqual(fetchedMembers, expectedMembers, t)
 }
 
 // Helpers
@@ -69,5 +61,11 @@ func makeTestdMembers() []Member {
 			email:     "member2@example.com",
 			dateAdded: time.Now(),
 		},
+	}
+}
+
+func expectEqual(givenMembers []Member, expectedMembers []Member, t *testing.T) {
+	if !reflect.DeepEqual(givenMembers, expectedMembers) {
+		t.Errorf("Expected %v, got %v instead\n", expectedMembers, givenMembers)
 	}
 }
