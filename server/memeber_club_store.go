@@ -19,6 +19,10 @@ func (mcs *MemberClubStore) AddMember(member Member) {
 	mcs.members = append(mcs.members, member)
 }
 
+func (mcs *MemberClubStore) GetMembers() []Member {
+	return mcs.members
+}
+
 func (mcs *MemberClubStore) contains(member Member) bool {
 	for _, m := range mcs.members {
 		if m == member {
