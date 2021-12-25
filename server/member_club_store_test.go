@@ -43,3 +43,27 @@ func TestAddMemberStoresTwoMembersOnAddingTwoMembers(t *testing.T) {
 		t.Errorf("Expected %v, got %v instead\n", expectedMembers, mcs.members)
 	}
 }
+
+func TestAddMemberDoesNotAddMemberWithExistedEmail(t *testing.T) {
+	mcs := MemberClubStore{}
+	expectedMembers := []Member{
+		Member{
+			name:      "member1",
+			email:     "member1@example.com",
+			dateAdded: time.Now(),
+		},
+		Member{
+			name:      "member2",
+			email:     "member2@example.com",
+			dateAdded: time.Now(),
+		},
+	}
+
+	mcs.AddMember(expectedMembers[0])
+	mcs.AddMember(expectedMembers[1])
+	mcs.AddMember(expectedMembers[0])
+
+	if !reflect.DeepEqual(mcs.members, expectedMembers) {
+		t.Errorf("Expected %v, got %v instead\n", expectedMembers, mcs.members)
+	}
+}
