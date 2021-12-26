@@ -15,7 +15,7 @@ func TestAddMemberStoresNewMember(t *testing.T) {
 	expectEqual(mcs.members, []Member{expectedMember}, t)
 }
 
-func TestAddMemberStoresTwoMembersOnAddingTwoMembers(t *testing.T) {
+func TestAddMemberStoresAllAddedMembersOnAddingValidMembers(t *testing.T) {
 	mcs := MemberClubStore{}
 	expectedMembers := makeTestedMembers()
 
