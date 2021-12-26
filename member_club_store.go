@@ -2,6 +2,7 @@ package main
 
 import (
 	"net/mail"
+	"regexp"
 	"time"
 )
 
@@ -16,6 +17,10 @@ type MemberClubStore struct {
 }
 
 func (mcs *MemberClubStore) AddMember(member Member) {
+	if !isNameValid(member.name) {
+		return
+	}
+
 	if !isValidEmail(member.email) {
 		return
 	}
@@ -43,4 +48,9 @@ func (mcs *MemberClubStore) containsEmail(email string) bool {
 func isValidEmail(email string) bool {
 	_, err := mail.ParseAddress(email)
 	return err == nil
+}
+
+func isNameValid(name string) bool {
+	r := regexp.MustCompile(`^[a-zA-Z \.]+$`)
+	return r.MatchString(name)
 }

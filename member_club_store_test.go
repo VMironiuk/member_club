@@ -46,6 +46,16 @@ func TestAddMemberDoesNotAddMemberWithInvalidEmail(t *testing.T) {
 	expectEqual(mcs.GetMembers(), []Member{}, t)
 }
 
+func TestAddMemberDoesNotAddMemberWithInvalidName(t *testing.T) {
+	mcs := MemberClubStore{}
+	invalidMembers := makeTestedMembersWithInvalidName()
+
+	mcs.AddMember(invalidMembers[0])
+	mcs.AddMember(invalidMembers[1])
+
+	expectEqual(mcs.GetMembers(), []Member{}, t)
+}
+
 func TestGetMembersReturnsAllMembersAdded(t *testing.T) {
 	mcs := MemberClubStore{}
 	expectedMembers := makeTestedMembers()
@@ -62,12 +72,12 @@ func TestGetMembersReturnsAllMembersAdded(t *testing.T) {
 func makeTestedMembers() []Member {
 	return []Member{
 		{
-			name:      "member1",
+			name:      "John Smith",
 			email:     "member1@example.com",
 			dateAdded: time.Now(),
 		},
 		{
-			name:      "member2",
+			name:      "John H. Doe",
 			email:     "member2@example.com",
 			dateAdded: time.Now(),
 		},
@@ -77,13 +87,28 @@ func makeTestedMembers() []Member {
 func makeTestedMembersWithInvalidEmail() []Member {
 	return []Member{
 		{
-			name:      "member1",
+			name:      "Mr. Brown",
 			email:     "bad-email",
 			dateAdded: time.Now(),
 		},
 		{
-			name:      "member2",
+			name:      "Dan Ben",
 			email:     "@mail",
+			dateAdded: time.Now(),
+		},
+	}
+}
+
+func makeTestedMembersWithInvalidName() []Member {
+	return []Member{
+		{
+			name:      "$member1",
+			email:     "member1@example.com",
+			dateAdded: time.Now(),
+		},
+		{
+			name:      "member2",
+			email:     "member2@example.com",
 			dateAdded: time.Now(),
 		},
 	}
