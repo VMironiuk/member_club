@@ -19,8 +19,7 @@ func TestAddMemberStoresAllAddedMembersOnAddingValidMembers(t *testing.T) {
 	mcs := MemberClubStore{}
 	expectedMembers := makeTestedMembers()
 
-	mcs.AddMember(expectedMembers[0])
-	mcs.AddMember(expectedMembers[1])
+	addMembers(&mcs, expectedMembers)
 
 	expectEqual(mcs.GetMembers(), expectedMembers, t)
 }
@@ -29,8 +28,7 @@ func TestAddMemberDoesNotAddMemberWithExistedEmail(t *testing.T) {
 	mcs := MemberClubStore{}
 	expectedMembers := makeTestedMembers()
 
-	mcs.AddMember(expectedMembers[0])
-	mcs.AddMember(expectedMembers[1])
+	addMembers(&mcs, expectedMembers)
 	mcs.AddMember(expectedMembers[0])
 
 	expectEqual(mcs.GetMembers(), expectedMembers, t)
@@ -40,8 +38,7 @@ func TestAddMemberDoesNotAddMemberWithInvalidEmail(t *testing.T) {
 	mcs := MemberClubStore{}
 	invalidMembers := makeTestedMembersWithInvalidEmail()
 
-	mcs.AddMember(invalidMembers[0])
-	mcs.AddMember(invalidMembers[1])
+	addMembers(&mcs, invalidMembers)
 
 	expectEqual(mcs.GetMembers(), []Member{}, t)
 }
@@ -50,8 +47,7 @@ func TestAddMemberDoesNotAddMemberWithInvalidName(t *testing.T) {
 	mcs := MemberClubStore{}
 	invalidMembers := makeTestedMembersWithInvalidName()
 
-	mcs.AddMember(invalidMembers[0])
-	mcs.AddMember(invalidMembers[1])
+	addMembers(&mcs, invalidMembers)
 
 	expectEqual(mcs.GetMembers(), []Member{}, t)
 }
@@ -60,8 +56,7 @@ func TestGetMembersReturnsAllMembersAdded(t *testing.T) {
 	mcs := MemberClubStore{}
 	expectedMembers := makeTestedMembers()
 
-	mcs.AddMember(expectedMembers[0])
-	mcs.AddMember(expectedMembers[1])
+	addMembers(&mcs, expectedMembers)
 
 	fetchedMembers := mcs.GetMembers()
 	expectEqual(fetchedMembers, expectedMembers, t)
@@ -111,6 +106,12 @@ func makeTestedMembersWithInvalidName() []Member {
 			email:     "member2@example.com",
 			dateAdded: time.Now(),
 		},
+	}
+}
+
+func addMembers(mcs *MemberClubStore, members []Member) {
+	for _, m := range members {
+		mcs.AddMember(m)
 	}
 }
 
