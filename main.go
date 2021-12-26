@@ -2,6 +2,7 @@ package main
 
 import (
 	"memberclub/store"
+	"net/http"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -18,9 +19,7 @@ func main() {
 }
 
 func rootRequest(c *gin.Context) {
-	c.JSON(200, gin.H{
-		"members": inMemoryStore.GetMembers(),
-	})
+	c.IndentedJSON(http.StatusOK, inMemoryStore.GetMembers())
 }
 
 func fillTestMembers() {

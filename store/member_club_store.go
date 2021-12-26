@@ -23,9 +23,9 @@ func (err *MemberWithSameEmailError) Error() string {
 }
 
 type Member struct {
-	Name      string
-	Email     string
-	DateAdded time.Time
+	Name      string    `json:"name"`
+	Email     string    `json:"email"`
+	DateAdded time.Time `json:"date_added"`
 }
 
 type MemberClubStore interface {
