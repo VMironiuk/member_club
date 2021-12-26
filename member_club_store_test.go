@@ -7,62 +7,66 @@ import (
 )
 
 func TestAddMemberStoresNewMember(t *testing.T) {
-	store := InMemoryMemberClubStore{}
+	sut := makeSUT()
 	expectedMember := makeTestedMembers()[0]
 
-	store.AddMember(expectedMember)
+	sut.AddMember(expectedMember)
 
-	expectEqual(store.GetMembers(), []Member{expectedMember}, t)
+	expectEqual(sut.GetMembers(), []Member{expectedMember}, t)
 }
 
 func TestAddMemberStoresAllAddedMembersOnAddingValidMembers(t *testing.T) {
-	store := InMemoryMemberClubStore{}
+	sut := makeSUT()
 	expectedMembers := makeTestedMembers()
 
-	addMembers(&store, expectedMembers)
+	addMembers(&sut, expectedMembers)
 
-	expectEqual(store.GetMembers(), expectedMembers, t)
+	expectEqual(sut.GetMembers(), expectedMembers, t)
 }
 
 func TestAddMemberDoesNotAddMemberWithExistedEmail(t *testing.T) {
-	store := InMemoryMemberClubStore{}
+	sut := makeSUT()
 	expectedMembers := makeTestedMembers()
 
-	addMembers(&store, expectedMembers)
-	store.AddMember(expectedMembers[0])
+	addMembers(&sut, expectedMembers)
+	sut.AddMember(expectedMembers[0])
 
-	expectEqual(store.GetMembers(), expectedMembers, t)
+	expectEqual(sut.GetMembers(), expectedMembers, t)
 }
 
 func TestAddMemberDoesNotAddMemberWithInvalidEmail(t *testing.T) {
-	store := InMemoryMemberClubStore{}
+	sut := makeSUT()
 	invalidMembers := makeTestedMembersWithInvalidEmail()
 
-	addMembers(&store, invalidMembers)
+	addMembers(&sut, invalidMembers)
 
-	expectEqual(store.GetMembers(), []Member{}, t)
+	expectEqual(sut.GetMembers(), []Member{}, t)
 }
 
 func TestAddMemberDoesNotAddMemberWithInvalidName(t *testing.T) {
-	store := InMemoryMemberClubStore{}
+	sut := makeSUT()
 	invalidMembers := makeTestedMembersWithInvalidName()
 
-	addMembers(&store, invalidMembers)
+	addMembers(&sut, invalidMembers)
 
-	expectEqual(store.GetMembers(), []Member{}, t)
+	expectEqual(sut.GetMembers(), []Member{}, t)
 }
 
-func TestGetMembersReturnsAllMembersAdded(t *testing.T) {
-	store := InMemoryMemberClubStore{}
+func TestGetMembersReturnsAllValidMembersAdded(t *testing.T) {
+	sut := makeSUT()
 	expectedMembers := makeTestedMembers()
 
-	addMembers(&store, expectedMembers)
+	addMembers(&sut, expectedMembers)
 
-	fetchedMembers := store.GetMembers()
+	fetchedMembers := sut.GetMembers()
 	expectEqual(fetchedMembers, expectedMembers, t)
 }
 
 // Helpers
+
+func makeSUT() MemberClubStore {
+	return &InMemoryMemberClubStore{}
+}
 
 func makeTestedMembers() []Member {
 	return []Member{
@@ -109,9 +113,9 @@ func makeTestedMembersWithInvalidName() []Member {
 	}
 }
 
-func addMembers(store *InMemoryMemberClubStore, members []Member) {
+func addMembers(store *MemberClubStore, members []Member) {
 	for _, m := range members {
-		store.AddMember(m)
+		(*store).AddMember(m)
 	}
 }
 
