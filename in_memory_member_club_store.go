@@ -9,20 +9,22 @@ type InMemoryMemberClubStore struct {
 	members []Member
 }
 
-func (store *InMemoryMemberClubStore) AddMember(member Member) {
+func (store *InMemoryMemberClubStore) AddMember(member Member) error {
 	if !isNameValid(member.name) {
-		return
+		return &InvalidMemberNameError{}
 	}
 
 	if !isValidEmail(member.email) {
-		return
+		return &InvalidMemberEmailError{}
 	}
 
 	if store.containsEmail(member.email) {
-		return
+		return &MemberWithSameEmailError{}
 	}
 
 	store.members = append(store.members, member)
+
+	return nil
 }
 
 func (store *InMemoryMemberClubStore) GetMembers() []Member {

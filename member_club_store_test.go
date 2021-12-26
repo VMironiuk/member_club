@@ -10,18 +10,20 @@ func TestAddMemberStoresNewMember(t *testing.T) {
 	sut := makeSUT()
 	expectedMember := makeTestedMembers()[0]
 
-	sut.AddMember(expectedMember)
+	err := sut.AddMember(expectedMember)
 
-	expectEqual(sut.GetMembers(), []Member{expectedMember}, t)
+	expectEqualErrors(err, nil, t)
+	expectEqualMembers(sut.GetMembers(), []Member{expectedMember}, t)
 }
 
 func TestAddMemberStoresAllAddedMembersOnAddingValidMembers(t *testing.T) {
 	sut := makeSUT()
 	expectedMembers := makeTestedMembers()
 
-	addMembers(&sut, expectedMembers)
+	err := addMembers(&sut, expectedMembers)
 
-	expectEqual(sut.GetMembers(), expectedMembers, t)
+	expectEqualErrors(err, nil, t)
+	expectEqualMembers(sut.GetMembers(), expectedMembers, t)
 }
 
 func TestAddMemberDoesNotAddMemberWithExistedEmail(t *testing.T) {
@@ -29,27 +31,30 @@ func TestAddMemberDoesNotAddMemberWithExistedEmail(t *testing.T) {
 	expectedMembers := makeTestedMembers()
 
 	addMembers(&sut, expectedMembers)
-	sut.AddMember(expectedMembers[0])
+	err := sut.AddMember(expectedMembers[0])
 
-	expectEqual(sut.GetMembers(), expectedMembers, t)
+	expectEqualErrors(err, &MemberWithSameEmailError{}, t)
+	expectEqualMembers(sut.GetMembers(), expectedMembers, t)
 }
 
 func TestAddMemberDoesNotAddMemberWithInvalidEmail(t *testing.T) {
 	sut := makeSUT()
 	invalidMembers := makeTestedMembersWithInvalidEmail()
 
-	addMembers(&sut, invalidMembers)
+	err := addMembers(&sut, invalidMembers)
 
-	expectEqual(sut.GetMembers(), []Member{}, t)
+	expectEqualErrors(err, &InvalidMemberEmailError{}, t)
+	expectEqualMembers(sut.GetMembers(), []Member{}, t)
 }
 
 func TestAddMemberDoesNotAddMemberWithInvalidName(t *testing.T) {
 	sut := makeSUT()
 	invalidMembers := makeTestedMembersWithInvalidName()
 
-	addMembers(&sut, invalidMembers)
+	err := addMembers(&sut, invalidMembers)
 
-	expectEqual(sut.GetMembers(), []Member{}, t)
+	expectEqualErrors(err, &InvalidMemberNameError{}, t)
+	expectEqualMembers(sut.GetMembers(), []Member{}, t)
 }
 
 func TestGetMembersReturnsAllValidMembersAdded(t *testing.T) {
@@ -59,7 +64,7 @@ func TestGetMembersReturnsAllValidMembersAdded(t *testing.T) {
 	addMembers(&sut, expectedMembers)
 
 	fetchedMembers := sut.GetMembers()
-	expectEqual(fetchedMembers, expectedMembers, t)
+	expectEqualMembers(fetchedMembers, expectedMembers, t)
 }
 
 // Helpers
@@ -113,18 +118,38 @@ func makeTestedMembersWithInvalidName() []Member {
 	}
 }
 
-func addMembers(store *MemberClubStore, members []Member) {
+func addMembers(store *MemberClubStore, members []Member) error {
 	for _, m := range members {
-		(*store).AddMember(m)
+		err := (*store).AddMember(m)
+		if err != nil {
+			return err
+		}
 	}
+	return nil
 }
 
-func expectEqual(givenMembers []Member, expectedMembers []Member, t *testing.T) {
+func expectEqualMembers(givenMembers []Member, expectedMembers []Member, t *testing.T) {
 	if len(givenMembers) == 0 && len(expectedMembers) == 0 {
 		return
 	}
 
 	if !reflect.DeepEqual(givenMembers, expectedMembers) {
-		t.Errorf("Expected %v, got %v instead\n", expectedMembers, givenMembers)
+		t.Errorf("Expected %v members, got %v instead\n", expectedMembers, givenMembers)
 	}
+}
+
+func expectEqualErrors(givenError error, expectedError error, t *testing.T) {
+	givenErrorText := errorText(givenError)
+	expectedErrorText := errorText(expectedError)
+
+	if givenErrorText != expectedErrorText {
+		t.Errorf("Expected %v error, got %v instead\n", expectedErrorText, givenErrorText)
+	}
+}
+
+func errorText(err error) string {
+	if err == nil {
+		return ""
+	}
+	return err.Error()
 }
