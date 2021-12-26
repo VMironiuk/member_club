@@ -1,4 +1,4 @@
-package main
+package store
 
 import (
 	"net/mail"
@@ -10,15 +10,15 @@ type InMemoryMemberClubStore struct {
 }
 
 func (store *InMemoryMemberClubStore) AddMember(member Member) error {
-	if !isNameValid(member.name) {
+	if !isNameValid(member.Name) {
 		return &InvalidMemberNameError{}
 	}
 
-	if !isValidEmail(member.email) {
+	if !isValidEmail(member.Email) {
 		return &InvalidMemberEmailError{}
 	}
 
-	if store.containsEmail(member.email) {
+	if store.containsEmail(member.Email) {
 		return &MemberWithSameEmailError{}
 	}
 
@@ -35,7 +35,7 @@ func (store *InMemoryMemberClubStore) GetMembers() []Member {
 
 func (store *InMemoryMemberClubStore) containsEmail(email string) bool {
 	for _, m := range store.members {
-		if m.email == email {
+		if m.Email == email {
 			return true
 		}
 	}

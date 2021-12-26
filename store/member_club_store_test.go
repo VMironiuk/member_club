@@ -1,4 +1,4 @@
-package main
+package store
 
 import (
 	"reflect"
@@ -76,14 +76,14 @@ func makeSUT() MemberClubStore {
 func makeTestedMembers() []Member {
 	return []Member{
 		{
-			name:      "John Smith",
-			email:     "member1@example.com",
-			dateAdded: time.Now(),
+			Name:      "John Smith",
+			Email:     "member1@example.com",
+			DateAdded: time.Now(),
 		},
 		{
-			name:      "John H. Doe",
-			email:     "member2@example.com",
-			dateAdded: time.Now(),
+			Name:      "John H. Doe",
+			Email:     "member2@example.com",
+			DateAdded: time.Now(),
 		},
 	}
 }
@@ -91,14 +91,14 @@ func makeTestedMembers() []Member {
 func makeTestedMembersWithInvalidEmail() []Member {
 	return []Member{
 		{
-			name:      "Mr. Brown",
-			email:     "bad-email",
-			dateAdded: time.Now(),
+			Name:      "Mr. Brown",
+			Email:     "bad-email",
+			DateAdded: time.Now(),
 		},
 		{
-			name:      "Dan Ben",
-			email:     "@mail",
-			dateAdded: time.Now(),
+			Name:      "Dan Ben",
+			Email:     "@mail",
+			DateAdded: time.Now(),
 		},
 	}
 }
@@ -106,14 +106,14 @@ func makeTestedMembersWithInvalidEmail() []Member {
 func makeTestedMembersWithInvalidName() []Member {
 	return []Member{
 		{
-			name:      "$member1",
-			email:     "member1@example.com",
-			dateAdded: time.Now(),
+			Name:      "$member1",
+			Email:     "member1@example.com",
+			DateAdded: time.Now(),
 		},
 		{
-			name:      "member2",
-			email:     "member2@example.com",
-			dateAdded: time.Now(),
+			Name:      "member2",
+			Email:     "member2@example.com",
+			DateAdded: time.Now(),
 		},
 	}
 }
