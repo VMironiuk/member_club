@@ -14,11 +14,11 @@ func main() {
 	fillTestMembers()
 
 	r := gin.Default()
-	r.GET("/", rootRequest)
+	r.GET("/members", getMembers)
 	r.Run()
 }
 
-func rootRequest(c *gin.Context) {
+func getMembers(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, inMemoryStore.GetMembers())
 }
 
