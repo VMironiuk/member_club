@@ -3,7 +3,6 @@ package main
 import (
 	"memberclub/store"
 	"net/http"
-	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -11,36 +10,32 @@ import (
 var inMemoryStore = store.InMemoryMemberClubStore{}
 
 func main() {
-	fillTestMembers()
-
 	r := gin.Default()
 	r.GET("/members", getMembers)
-	r.Run()
+	r.POST("/member", addMember)
+	r.Run("localhost:8080")
 }
 
 func getMembers(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, inMemoryStore.GetMembers())
 }
 
-func fillTestMembers() {
-	inMemoryStore.AddMember(store.Member{
-		Name:      "John Show",
-		Email:     "j.show@company.com",
-		DateAdded: time.Now(),
-	})
-	inMemoryStore.AddMember(store.Member{
-		Name:      "Dana A. Watkins",
-		Email:     "Dana2000@mail.com",
-		DateAdded: time.Now(),
-	})
-	inMemoryStore.AddMember(store.Member{
-		Name:      "Henri Rousseau",
-		Email:     "rousseau@impressionis.fr",
-		DateAdded: time.Now(),
-	})
-	inMemoryStore.AddMember(store.Member{
-		Name:      "Mr. Brown",
-		Email:     "brown@gmail.com",
-		DateAdded: time.Now(),
-	})
+func addMember(c *gin.Context) {
+	var newMember store.Member
+
+	if err := c.BindJSON(&newMember); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "Something went wrong when creating a new member.",
+		})
+		return
+	}
+
+	if err := inMemoryStore.AddMember(newMember); err != nil {
+		c.JSON(http.StatusNotAcceptable, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	c.IndentedJSON(http.StatusCreated, inMemoryStore.GetMembers())
 }
