@@ -13,7 +13,7 @@ type MemberClubStore struct {
 }
 
 func (mcs *MemberClubStore) AddMember(member Member) {
-	if mcs.contains(member) {
+	if mcs.containsEmail(member) {
 		return
 	}
 	mcs.members = append(mcs.members, member)
@@ -23,9 +23,9 @@ func (mcs *MemberClubStore) GetMembers() []Member {
 	return mcs.members
 }
 
-func (mcs *MemberClubStore) contains(member Member) bool {
+func (mcs *MemberClubStore) containsEmail(member Member) bool {
 	for _, m := range mcs.members {
-		if m == member {
+		if m.email == member.email {
 			return true
 		}
 	}
