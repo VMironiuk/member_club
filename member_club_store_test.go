@@ -8,7 +8,7 @@ import (
 
 func TestAddMemberStoresNewMember(t *testing.T) {
 	mcs := MemberClubStore{}
-	expectedMember := makeTestdMembers()[0]
+	expectedMember := makeTestedMembers()[0]
 
 	mcs.AddMember(expectedMember)
 
@@ -17,7 +17,7 @@ func TestAddMemberStoresNewMember(t *testing.T) {
 
 func TestAddMemberStoresTwoMembersOnAddingTwoMembers(t *testing.T) {
 	mcs := MemberClubStore{}
-	expectedMembers := makeTestdMembers()
+	expectedMembers := makeTestedMembers()
 
 	mcs.AddMember(expectedMembers[0])
 	mcs.AddMember(expectedMembers[1])
@@ -27,7 +27,7 @@ func TestAddMemberStoresTwoMembersOnAddingTwoMembers(t *testing.T) {
 
 func TestAddMemberDoesNotAddMemberWithExistedEmail(t *testing.T) {
 	mcs := MemberClubStore{}
-	expectedMembers := makeTestdMembers()
+	expectedMembers := makeTestedMembers()
 
 	mcs.AddMember(expectedMembers[0])
 	mcs.AddMember(expectedMembers[1])
@@ -38,7 +38,7 @@ func TestAddMemberDoesNotAddMemberWithExistedEmail(t *testing.T) {
 
 func TestGetMembersReturnsAllMembersAdded(t *testing.T) {
 	mcs := MemberClubStore{}
-	expectedMembers := makeTestdMembers()
+	expectedMembers := makeTestedMembers()
 
 	mcs.AddMember(expectedMembers[0])
 	mcs.AddMember(expectedMembers[1])
@@ -49,14 +49,14 @@ func TestGetMembersReturnsAllMembersAdded(t *testing.T) {
 
 // Helpers
 
-func makeTestdMembers() []Member {
+func makeTestedMembers() []Member {
 	return []Member{
-		Member{
+		{
 			name:      "member1",
 			email:     "member1@example.com",
 			dateAdded: time.Now(),
 		},
-		Member{
+		{
 			name:      "member2",
 			email:     "member2@example.com",
 			dateAdded: time.Now(),
