@@ -4,6 +4,7 @@ import (
 	"memberclub/store"
 	"net/http"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -11,6 +12,9 @@ var inMemoryStore = store.InMemoryMemberClubStore{}
 
 func main() {
 	r := gin.Default()
+	r.Use(cors.New(cors.Config{
+		AllowOrigins: []string{"*"},
+	}))
 	r.GET("/members", getMembers)
 	r.POST("/member", addMember)
 	r.Run("localhost:8080")
