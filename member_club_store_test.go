@@ -12,7 +12,7 @@ func TestAddMemberStoresNewMember(t *testing.T) {
 
 	mcs.AddMember(expectedMember)
 
-	expectEqual(mcs.members, []Member{expectedMember}, t)
+	expectEqual(mcs.GetMembers(), []Member{expectedMember}, t)
 }
 
 func TestAddMemberStoresAllAddedMembersOnAddingValidMembers(t *testing.T) {
@@ -22,7 +22,7 @@ func TestAddMemberStoresAllAddedMembersOnAddingValidMembers(t *testing.T) {
 	mcs.AddMember(expectedMembers[0])
 	mcs.AddMember(expectedMembers[1])
 
-	expectEqual(mcs.members, expectedMembers, t)
+	expectEqual(mcs.GetMembers(), expectedMembers, t)
 }
 
 func TestAddMemberDoesNotAddMemberWithExistedEmail(t *testing.T) {
@@ -33,7 +33,7 @@ func TestAddMemberDoesNotAddMemberWithExistedEmail(t *testing.T) {
 	mcs.AddMember(expectedMembers[1])
 	mcs.AddMember(expectedMembers[0])
 
-	expectEqual(mcs.members, expectedMembers, t)
+	expectEqual(mcs.GetMembers(), expectedMembers, t)
 }
 
 func TestGetMembersReturnsAllMembersAdded(t *testing.T) {
