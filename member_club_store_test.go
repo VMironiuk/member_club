@@ -7,58 +7,58 @@ import (
 )
 
 func TestAddMemberStoresNewMember(t *testing.T) {
-	mcs := MemberClubStore{}
+	store := InMemoryMemberClubStore{}
 	expectedMember := makeTestedMembers()[0]
 
-	mcs.AddMember(expectedMember)
+	store.AddMember(expectedMember)
 
-	expectEqual(mcs.GetMembers(), []Member{expectedMember}, t)
+	expectEqual(store.GetMembers(), []Member{expectedMember}, t)
 }
 
 func TestAddMemberStoresAllAddedMembersOnAddingValidMembers(t *testing.T) {
-	mcs := MemberClubStore{}
+	store := InMemoryMemberClubStore{}
 	expectedMembers := makeTestedMembers()
 
-	addMembers(&mcs, expectedMembers)
+	addMembers(&store, expectedMembers)
 
-	expectEqual(mcs.GetMembers(), expectedMembers, t)
+	expectEqual(store.GetMembers(), expectedMembers, t)
 }
 
 func TestAddMemberDoesNotAddMemberWithExistedEmail(t *testing.T) {
-	mcs := MemberClubStore{}
+	store := InMemoryMemberClubStore{}
 	expectedMembers := makeTestedMembers()
 
-	addMembers(&mcs, expectedMembers)
-	mcs.AddMember(expectedMembers[0])
+	addMembers(&store, expectedMembers)
+	store.AddMember(expectedMembers[0])
 
-	expectEqual(mcs.GetMembers(), expectedMembers, t)
+	expectEqual(store.GetMembers(), expectedMembers, t)
 }
 
 func TestAddMemberDoesNotAddMemberWithInvalidEmail(t *testing.T) {
-	mcs := MemberClubStore{}
+	store := InMemoryMemberClubStore{}
 	invalidMembers := makeTestedMembersWithInvalidEmail()
 
-	addMembers(&mcs, invalidMembers)
+	addMembers(&store, invalidMembers)
 
-	expectEqual(mcs.GetMembers(), []Member{}, t)
+	expectEqual(store.GetMembers(), []Member{}, t)
 }
 
 func TestAddMemberDoesNotAddMemberWithInvalidName(t *testing.T) {
-	mcs := MemberClubStore{}
+	store := InMemoryMemberClubStore{}
 	invalidMembers := makeTestedMembersWithInvalidName()
 
-	addMembers(&mcs, invalidMembers)
+	addMembers(&store, invalidMembers)
 
-	expectEqual(mcs.GetMembers(), []Member{}, t)
+	expectEqual(store.GetMembers(), []Member{}, t)
 }
 
 func TestGetMembersReturnsAllMembersAdded(t *testing.T) {
-	mcs := MemberClubStore{}
+	store := InMemoryMemberClubStore{}
 	expectedMembers := makeTestedMembers()
 
-	addMembers(&mcs, expectedMembers)
+	addMembers(&store, expectedMembers)
 
-	fetchedMembers := mcs.GetMembers()
+	fetchedMembers := store.GetMembers()
 	expectEqual(fetchedMembers, expectedMembers, t)
 }
 
@@ -109,9 +109,9 @@ func makeTestedMembersWithInvalidName() []Member {
 	}
 }
 
-func addMembers(mcs *MemberClubStore, members []Member) {
+func addMembers(store *InMemoryMemberClubStore, members []Member) {
 	for _, m := range members {
-		mcs.AddMember(m)
+		store.AddMember(m)
 	}
 }
 

@@ -12,11 +12,16 @@ type Member struct {
 	dateAdded time.Time
 }
 
-type MemberClubStore struct {
+type MemberClubStore interface {
+	AddMember(mmember Member)
+	GetMembers() []Member
+}
+
+type InMemoryMemberClubStore struct {
 	members []Member
 }
 
-func (mcs *MemberClubStore) AddMember(member Member) {
+func (store *InMemoryMemberClubStore) AddMember(member Member) {
 	if !isNameValid(member.name) {
 		return
 	}
@@ -25,19 +30,19 @@ func (mcs *MemberClubStore) AddMember(member Member) {
 		return
 	}
 
-	if mcs.containsEmail(member.email) {
+	if store.containsEmail(member.email) {
 		return
 	}
 
-	mcs.members = append(mcs.members, member)
+	store.members = append(store.members, member)
 }
 
-func (mcs *MemberClubStore) GetMembers() []Member {
-	return mcs.members
+func (store *InMemoryMemberClubStore) GetMembers() []Member {
+	return store.members
 }
 
-func (mcs *MemberClubStore) containsEmail(email string) bool {
-	for _, m := range mcs.members {
+func (store *InMemoryMemberClubStore) containsEmail(email string) bool {
+	for _, m := range store.members {
 		if m.email == email {
 			return true
 		}
