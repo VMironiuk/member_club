@@ -1,4 +1,4 @@
-package main
+package store
 
 import (
 	"time"
@@ -23,9 +23,9 @@ func (err *MemberWithSameEmailError) Error() string {
 }
 
 type Member struct {
-	name      string
-	email     string
-	dateAdded time.Time
+	Name      string
+	Email     string
+	DateAdded time.Time
 }
 
 type MemberClubStore interface {
