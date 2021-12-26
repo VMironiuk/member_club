@@ -20,7 +20,7 @@ func (mcs *MemberClubStore) AddMember(member Member) {
 		return
 	}
 
-	if mcs.containsEmail(member) {
+	if mcs.containsEmail(member.email) {
 		return
 	}
 
@@ -31,9 +31,9 @@ func (mcs *MemberClubStore) GetMembers() []Member {
 	return mcs.members
 }
 
-func (mcs *MemberClubStore) containsEmail(member Member) bool {
+func (mcs *MemberClubStore) containsEmail(email string) bool {
 	for _, m := range mcs.members {
-		if m.email == member.email {
+		if m.email == email {
 			return true
 		}
 	}
