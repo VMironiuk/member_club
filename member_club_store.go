@@ -1,6 +1,9 @@
 package main
 
-import "time"
+import (
+	"net/mail"
+	"time"
+)
 
 type Member struct {
 	name      string
@@ -13,9 +16,14 @@ type MemberClubStore struct {
 }
 
 func (mcs *MemberClubStore) AddMember(member Member) {
+	if !isValidEmail(member.email) {
+		return
+	}
+
 	if mcs.containsEmail(member) {
 		return
 	}
+
 	mcs.members = append(mcs.members, member)
 }
 
@@ -30,4 +38,9 @@ func (mcs *MemberClubStore) containsEmail(member Member) bool {
 		}
 	}
 	return false
+}
+
+func isValidEmail(email string) bool {
+	_, err := mail.ParseAddress(email)
+	return err == nil
 }

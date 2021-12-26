@@ -36,6 +36,16 @@ func TestAddMemberDoesNotAddMemberWithExistedEmail(t *testing.T) {
 	expectEqual(mcs.GetMembers(), expectedMembers, t)
 }
 
+func TestAddMemberDoesNotAddMemberWithInvalidEmail(t *testing.T) {
+	mcs := MemberClubStore{}
+	invalidMembers := makeTestedMembersWithInvalidEmail()
+
+	mcs.AddMember(invalidMembers[0])
+	mcs.AddMember(invalidMembers[1])
+
+	expectEqual(mcs.GetMembers(), []Member{}, t)
+}
+
 func TestGetMembersReturnsAllMembersAdded(t *testing.T) {
 	mcs := MemberClubStore{}
 	expectedMembers := makeTestedMembers()
@@ -64,7 +74,26 @@ func makeTestedMembers() []Member {
 	}
 }
 
+func makeTestedMembersWithInvalidEmail() []Member {
+	return []Member{
+		{
+			name:      "member1",
+			email:     "bad-email",
+			dateAdded: time.Now(),
+		},
+		{
+			name:      "member2",
+			email:     "@mail",
+			dateAdded: time.Now(),
+		},
+	}
+}
+
 func expectEqual(givenMembers []Member, expectedMembers []Member, t *testing.T) {
+	if len(givenMembers) == 0 && len(expectedMembers) == 0 {
+		return
+	}
+
 	if !reflect.DeepEqual(givenMembers, expectedMembers) {
 		t.Errorf("Expected %v, got %v instead\n", expectedMembers, givenMembers)
 	}
