@@ -1,9 +1,7 @@
 package store
 
 import (
-	"reflect"
 	"testing"
-	"time"
 )
 
 func TestAddMemberStoresNewMember(t *testing.T) {
@@ -76,14 +74,12 @@ func makeSUT() MemberClubStore {
 func makeTestedMembers() []Member {
 	return []Member{
 		{
-			Name:      "John Smith",
-			Email:     "member1@example.com",
-			DateAdded: time.Now(),
+			Name:  "John Smith",
+			Email: "member1@example.com",
 		},
 		{
-			Name:      "John H. Doe",
-			Email:     "member2@example.com",
-			DateAdded: time.Now(),
+			Name:  "John H. Doe",
+			Email: "member2@example.com",
 		},
 	}
 }
@@ -91,14 +87,12 @@ func makeTestedMembers() []Member {
 func makeTestedMembersWithInvalidEmail() []Member {
 	return []Member{
 		{
-			Name:      "Mr. Brown",
-			Email:     "bad-email",
-			DateAdded: time.Now(),
+			Name:  "Mr. Brown",
+			Email: "bad-email",
 		},
 		{
-			Name:      "Dan Ben",
-			Email:     "@mail",
-			DateAdded: time.Now(),
+			Name:  "Dan Ben",
+			Email: "@mail",
 		},
 	}
 }
@@ -106,14 +100,12 @@ func makeTestedMembersWithInvalidEmail() []Member {
 func makeTestedMembersWithInvalidName() []Member {
 	return []Member{
 		{
-			Name:      "$member1",
-			Email:     "member1@example.com",
-			DateAdded: time.Now(),
+			Name:  "$member1",
+			Email: "member1@example.com",
 		},
 		{
-			Name:      "member2",
-			Email:     "member2@example.com",
-			DateAdded: time.Now(),
+			Name:  "member2",
+			Email: "member2@example.com",
 		},
 	}
 }
@@ -133,8 +125,16 @@ func expectEqualMembers(givenMembers []Member, expectedMembers []Member, t *test
 		return
 	}
 
-	if !reflect.DeepEqual(givenMembers, expectedMembers) {
+	if len(givenMembers) != len(expectedMembers) {
 		t.Errorf("Expected %v members, got %v instead\n", expectedMembers, givenMembers)
+		return
+	}
+
+	for i := range givenMembers {
+		if givenMembers[i].Name != expectedMembers[i].Name || givenMembers[i].Email != expectedMembers[i].Email {
+			t.Errorf("Expected %v members, got %v instead\n", expectedMembers, givenMembers)
+			return
+		}
 	}
 }
 

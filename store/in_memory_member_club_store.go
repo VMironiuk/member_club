@@ -3,6 +3,7 @@ package store
 import (
 	"net/mail"
 	"regexp"
+	"time"
 )
 
 type InMemoryMemberClubStore struct {
@@ -22,6 +23,7 @@ func (store *InMemoryMemberClubStore) AddMember(member Member) error {
 		return &MemberWithSameEmailError{}
 	}
 
+	member.DateAdded = time.Now()
 	store.members = append(store.members, member)
 
 	return nil
