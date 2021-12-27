@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <title>Member Club</title>
+</head>
+
+<body>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+  <style>
+    th { color:#fff; }
+  </style>
+
+  <table class="table table-striped">
+    <tr  class="bg-info">
+      <th>Name</th>
+      <th>Email</th>
+      <th>Registration date</th>
+    </tr>
+
+    <tbody id="myTable"></tbody>
+  </table>
+
+  <form id="myForm">
+    <label for="memberName">Name:</label>
+    <input id="memberName" name="name" value="">
+    <label for="memberEmail">Email:</label>
+    <input id="memberEmail" name="email" value="">
+    <input type="submit" value="Add New Member">
+  </form>
+
+  <script type="text/javascript">
+    window.addEventListener("load", function() {
+      getMembers('http://127.0.0.1:8080/members');
+
+      const name = document.getElementById('memberName');
+      const email = document.getElementById('memberEmail');
+      name.value = "";
+      email.value = "";
+
+      const form = document.getElementById('myForm');
+      form.addEventListener("submit", function(event) {
+        event.preventDefault();
+
+        // Add New Memeber and Reload Table
+        fetch('http://127.0.0.1:8080/member', {
+          method: "POST",
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({"name": name.value, "email": email.value})
+        }).then(
+          function(response) {
+            if (response.status != 201) {
+              response.json().then(function(data) {
+                alert(data.error);
+              });
+              return;
+            }
+
+            response.json().then(function(data) {
+              buildTable(data);
+              name.value = "";
+              email.value = "";
+            });
+          }
+        )
+        .catch(function(err) {
+          alert('Fetch Error :-S', err);
+        });
+      });
+    });
+
+  	function buildTable(data){
+  		var table = document.getElementById('myTable');
+      table.innerHTML = ""
+
+  		for (var i = 0; i < data.length; i++){
+  			var row = `<tr>
+  							<td>${data[i].name}</td>
+  							<td>${data[i].email}</td>
+  							<td>${data[i].date_added}</td>
+  					  </tr>`
+  			table.innerHTML += row
+  		}
+  	}
+
+    function getMembers(url) {
+      fetch(url)
+        .then(
+          function(response) {
+            if (response.status != 200) {
+              response.json().then(function(data) {
+                alert(data.error);
+              });
+              return;
+            }
+
+            response.json().then(function(data) {
+              buildTable(data)
+            });
+          }
+        )
+        .catch(function(err) {
+          alert('Fetch Error :-S', err);
+        });
+    }
+  </script>
+</body>
+
+</html>
